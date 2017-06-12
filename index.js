@@ -25,10 +25,10 @@ const locateTpl = function (templateFile, ctx, options) {
         templateFile = [app_path, lib.sep, 'view', lib.sep];
         if (group) {
             templateFile.push(group);
-            templateFile.push(options.sep);
+            templateFile.push(lib.sep);
         }
         templateFile.push(options.default_theme || 'default');
-        templateFile.push(options.sep);
+        templateFile.push(lib.sep);
 
         templateFile.push(controller);
         templateFile.push(options.file_depr || '_');
@@ -47,10 +47,10 @@ const locateTpl = function (templateFile, ctx, options) {
         templateFile = [app_path, lib.sep, 'view', lib.sep];
         if (group) {
             templateFile.push(group.toLowerCase());
-            templateFile.push(options.sep);
+            templateFile.push(lib.sep);
         }
         templateFile.push(options.default_theme || 'default');
-        templateFile.push(options.sep);
+        templateFile.push(lib.sep);
 
         templateFile.push(controller);
         templateFile.push(options.file_depr || '_');
