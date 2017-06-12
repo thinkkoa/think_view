@@ -70,6 +70,14 @@ module.exports = function (options) {
     });
 
     return function (ctx, next) {
+        ctx.fatch = function (templateFile, data) {
+            let tplFile = locateTpl(templateFile, ctx, options);
+            if (!tplFile || !lib.isFile(tplFile)) {
+                ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
+            }
+            return think._view.fatch(tplFile, data);
+        };
+        
         ctx.render = function (templateFile, data, charset, contentType) {
             let tplFile = locateTpl(templateFile, ctx, options);
             if (!tplFile || !lib.isFile(tplFile)) {
