@@ -85,7 +85,7 @@ module.exports = function (options) {
             }
             charset = charset || think._caches.configs.config['encoding'] || 'utf-8';
             contentType = contentType || 'text/html';
-            ctx.types(contentType, charset);
+            ctx.type(contentType, charset);
             return think._view.fatch(tplFile, data).then(res => {
                 ctx.body = res;
             });
