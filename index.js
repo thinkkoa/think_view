@@ -19,10 +19,10 @@ const locateTpl = function (templateFile, ctx, options) {
     let group = ctx.group ? ctx.group : '',
         controller = ctx.controller ? ctx.controller : '',
         action = ctx.action ? ctx.action : '',
-        app_path = options.app_path ? options.app_path : process.cwd();
+        view_path = options.view_path ? options.view_path : process.cwd();
 
     if (lib.isEmpty(templateFile)) {
-        templateFile = [app_path, lib.sep, 'view', lib.sep];
+        templateFile = [view_path, lib.sep];
         if (group) {
             templateFile.push(group);
             templateFile.push(lib.sep);
@@ -44,7 +44,7 @@ const locateTpl = function (templateFile, ctx, options) {
         action = tplPath.pop().toLowerCase() || action;
         controller = tplPath.pop().toLowerCase() || controller;
         group = tplPath.pop();
-        templateFile = [app_path, lib.sep, 'view', lib.sep];
+        templateFile = [view_path, lib.sep];
         if (group) {
             templateFile.push(group.toLowerCase());
             templateFile.push(lib.sep);
