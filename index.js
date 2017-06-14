@@ -66,19 +66,35 @@ const locateTpl = function (templateFile, ctx, options) {
 module.exports = function (options) {
     think.app.once('appReady', () => {
         const engine = require(`./lib/adapter/${options.engine_type || 'ejs'}`);
-        think._view = new engine(options.engine_config || {});
+        think._caches._view = new engine(options.engine_config || {});
     });
 
     return function (ctx, next) {
-        ctx.fatch = function (templateFile, data) {
+        /**
+         * 
+         * 
+         * @param {any} templateFile 
+         * @param {any} data 
+         * @returns 
+         */
+        lib.define(ctx, 'fatch', function (templateFile, data) {
             let tplFile = locateTpl(templateFile, ctx, options);
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }
-            return think._view.fatch(tplFile, data);
-        };
+            return think._caches._view.fatch(tplFile, data);
+        });
         
-        ctx.render = function (templateFile, data, charset, contentType) {
+        /**
+         * 
+         * 
+         * @param {any} templateFile 
+         * @param {any} data 
+         * @param {any} charset 
+         * @param {any} contentType 
+         * @returns 
+         */
+        lib.define(ctx, 'render', function (templateFile, data, charset, contentType) {
             let tplFile = locateTpl(templateFile, ctx, options);
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
@@ -86,10 +102,11 @@ module.exports = function (options) {
             charset = charset || think._caches.configs.config['encoding'] || 'utf-8';
             contentType = contentType || 'text/html';
             ctx.type(contentType, charset);
-            return think._view.fatch(tplFile, data).then(res => {
+            return think._caches._view.fatch(tplFile, data).then(res => {
                 ctx.body = res;
             });
-        };
+        });
+
         return next();
     };
 };
