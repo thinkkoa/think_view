@@ -19,7 +19,7 @@ const locateTpl = function (templateFile, ctx, options) {
     let group = ctx.group ? ctx.group : '',
         controller = ctx.controller ? ctx.controller : '',
         action = ctx.action ? ctx.action : '',
-        view_path = options.view_path ? options.view_path : process.cwd();
+        view_path = options.view_path ? options.view_path : think.app_path + '/view';
 
     if (lib.isEmpty(templateFile)) {
         templateFile = [view_path, lib.sep];
