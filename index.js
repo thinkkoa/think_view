@@ -36,7 +36,7 @@ const locateTpl = function (templateFile, ctx, options) {
         templateFile.push(action);
         templateFile.push(options.file_suffix || '.html');
         return templateFile.join('');
-    } else if(lib.isString(templateFile)){
+    } else if (lib.isString(templateFile)) {
         if (lib.isFile(templateFile)) {
             return templateFile;
         }
@@ -61,9 +61,21 @@ const locateTpl = function (templateFile, ctx, options) {
     }
     return null;
 };
-
+/**
+ * default options
+ */
+const defaultOptions = {
+    view_path: think.app_path + '/view', //模板目录
+    engine_type: 'ejs', //模版引擎名称
+    engine_config: { cache: true }, //模版引擎配置
+    content_type: 'text/html', //模版输出类型
+    file_suffix: '.html', //模版文件名后缀
+    file_depr: '_', //controller和action之间的分隔符
+    default_theme: 'default', //默认模板主题
+};
 
 module.exports = function (options) {
+    options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
     think.app.once('appReady', () => {
         const engine = require(`./lib/adapter/${options.engine_type || 'ejs'}`);
         think._caches._view = new engine(options.engine_config || {});
@@ -84,7 +96,7 @@ module.exports = function (options) {
             }
             return think._caches._view.fatch(tplFile, data);
         });
-        
+
         /**
          * 
          * 
