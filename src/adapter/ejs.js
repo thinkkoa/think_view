@@ -5,12 +5,16 @@
  * @license    MIT
  * @version    17/6/12
  */
-const ejs = require('ejs');
 const lib = require('think_lib');
+const view = require('../view.js');
 
-module.exports = class {
-    constructor (options = {}) {
-        this.options = lib.extend({}, options);
+module.exports = class extends view{
+    constructor (options = {}, driver) {
+        super(options, driver);
+        this.options = lib.extend({
+            cache: true,
+            debug: false
+        }, options);
     }
 
     /**
@@ -19,9 +23,8 @@ module.exports = class {
      * @param {any} templateFile 
      * @param {any} data 
      */
-    async fatch(templateFile, data) {
-        this.options.filename = templateFile;
-        let content = await lib.readFile(templateFile);
-        return ejs.compile(content, this.options)(data);
+    fatch(templateFile, data) {
+        const renderFile = lib.promisify(this.driver.renderFile, this.driver);
+        return renderFile(templateFile, data, this.options);
     }
 };

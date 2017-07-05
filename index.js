@@ -6,6 +6,7 @@
  * @version    17/6/12
  */
 const lib = require('think_lib');
+const view = require('./lib/view.js');
 
 /**
  * 
@@ -66,7 +67,7 @@ const locateTpl = function (templateFile, ctx, options) {
  */
 const defaultOptions = {
     view_path: think.app_path + '/view', //模板目录
-    engine_type: 'ejs', //模版引擎名称
+    engine_type: 'ejs', //模版引擎名称 ejs, pug
     engine_config: { cache: true }, //模版引擎配置
     content_type: 'text/html', //模版输出类型
     file_suffix: '.html', //模版文件名后缀
@@ -77,8 +78,7 @@ const defaultOptions = {
 module.exports = function (options) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
     think.app.once('appReady', () => {
-        const engine = require(`./lib/adapter/${options.engine_type || 'ejs'}`);
-        think._caches._view = new engine(options.engine_config || {});
+        think._caches._view = view.getInstance(options.engine_config || {}, options.engine_type || 'ejs');
     });
 
     return function (ctx, next) {
