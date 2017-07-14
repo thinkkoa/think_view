@@ -28,7 +28,7 @@ const locateTpl = function (templateFile, ctx, options) {
             templateFile.push(group);
             templateFile.push(lib.sep);
         }
-        templateFile.push(options.default_theme || 'default');
+        templateFile.push(options.default_theme || '');
         templateFile.push(lib.sep);
 
         templateFile.push(controller);
@@ -50,7 +50,7 @@ const locateTpl = function (templateFile, ctx, options) {
             templateFile.push(group.toLowerCase());
             templateFile.push(lib.sep);
         }
-        templateFile.push(options.default_theme || 'default');
+        templateFile.push(options.default_theme || '');
         templateFile.push(lib.sep);
 
         templateFile.push(controller);
@@ -72,7 +72,7 @@ const defaultOptions = {
     content_type: 'text/html', //模版输出类型
     file_suffix: '.html', //模版文件名后缀
     file_depr: '_', //controller和action之间的分隔符
-    default_theme: 'default', //默认模板主题
+    default_theme: '', //默认模板主题
 };
 
 module.exports = function (options) {
