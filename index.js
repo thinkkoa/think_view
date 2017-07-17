@@ -82,8 +82,36 @@ module.exports = function (options) {
     });
 
     return function (ctx, next) {
+
         /**
+         * 模板赋值
          * 
+         * @param {any} name 
+         * @param {any} value 
+         * @returns 
+         */
+        lib.define(ctx, 'assign', function (name, value) {
+            if (!ctx._assign) {
+                lib.define(ctx, '_assign', {}, 1);
+            }
+            if (name === undefined) {
+                return ctx._assign;
+            }
+            if (think.isString(name) && arguments.length === 1) {
+                return ctx._assign[name];
+            }
+            if (think.isObject(name)) {
+                for (let key in name) {
+                    ctx._assign[key] = name[key];
+                }
+            } else {
+                ctx._assign[name] = value;
+            }
+            return null;
+        });
+
+        /**
+         * 渲染模板并返回内容
          * 
          * @param {any} templateFile 
          * @param {any} data 
@@ -94,11 +122,11 @@ module.exports = function (options) {
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }
-            return think._caches._view.fatch(tplFile, data);
+            return think._caches._view.fatch(tplFile, data || ctx._assign);
         });
 
         /**
-         * 
+         * 定位、渲染、输出模板
          * 
          * @param {any} templateFile 
          * @param {any} data 
@@ -114,7 +142,7 @@ module.exports = function (options) {
             charset = charset || think._caches.configs.config['encoding'] || 'utf-8';
             contentType = contentType || 'text/html';
             ctx.types(contentType, charset);
-            return think._caches._view.fatch(tplFile, data).then(res => {
+            return think._caches._view.fatch(tplFile, data || ctx._assign).then(res => {
                 ctx.body = res;
             });
         });
