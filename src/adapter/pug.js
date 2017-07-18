@@ -23,7 +23,7 @@ module.exports = class extends view{
      * @param {any} templateFile 
      * @param {any} data 
      */
-    fatch(templateFile, data) {
+    compile(templateFile, data) {
         const compileFile = lib.promisify(this.driver.compileFile, this.driver);
         return compileFile(templateFile, this.options)(data);
     }

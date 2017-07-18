@@ -117,12 +117,12 @@ module.exports = function (options) {
          * @param {any} data 
          * @returns 
          */
-        lib.define(ctx, 'fatch', function (templateFile, data) {
+        lib.define(ctx, 'compile', function (templateFile, data) {
             let tplFile = locateTpl(templateFile, ctx, options);
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }
-            return think._caches._view.fatch(tplFile, data || ctx._assign);
+            return think._caches._view.compile(tplFile, data || ctx._assign);
         });
 
         /**
@@ -142,7 +142,7 @@ module.exports = function (options) {
             charset = charset || think._caches.configs.config['encoding'] || 'utf-8';
             contentType = contentType || 'text/html';
             ctx.types(contentType, charset);
-            return think._caches._view.fatch(tplFile, data || ctx._assign).then(res => {
+            return think._caches._view.compile(tplFile, data || ctx._assign).then(res => {
                 ctx.body = res;
             });
         });
