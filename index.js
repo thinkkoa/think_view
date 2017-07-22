@@ -144,6 +144,7 @@ module.exports = function (options) {
             ctx.types(contentType, charset);
             return think._caches._view.compile(tplFile, data || ctx._assign).then(res => {
                 ctx.body = res;
+                return think.prevent();
             });
         });
 
