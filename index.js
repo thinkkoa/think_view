@@ -141,7 +141,11 @@ module.exports = function (options) {
             }
             charset = charset || think._caches.configs.config['encoding'] || 'utf-8';
             contentType = contentType || 'text/html';
-            ctx.types(contentType, charset);
+            if (charset !== false && contentType.toLowerCase().indexOf('charset=') === -1) {
+                contentType += '; charset=' + charset;
+            }
+            ctx.type = contentType;
+
             return think._caches._view.compile(tplFile, data || ctx._assign).then(res => {
                 ctx.body = res;
                 return think.prevent();
