@@ -20,7 +20,7 @@ const locateTpl = function (templateFile, ctx, options) {
     let group = ctx.group ? ctx.group : '',
         controller = ctx.controller ? ctx.controller : '',
         action = ctx.action ? ctx.action : '',
-        view_path = options.view_path ? options.view_path : think.app_path + '/view';
+        view_path = options.view_path ? options.view_path : process.env.APP_PATH + '/view';
 
     if (lib.isEmpty(templateFile)) {
         templateFile = [view_path, lib.sep];
@@ -66,7 +66,7 @@ const locateTpl = function (templateFile, ctx, options) {
  * default options
  */
 const defaultOptions = {
-    view_path: think.app_path + '/view', //模板目录
+    view_path: process.env.APP_PATH + '/view', //模板目录
     engine_type: 'ejs', //模版引擎名称 ejs, pug
     engine_config: { cache: true }, //模版引擎配置
     content_type: 'text/html', //模版输出类型
@@ -75,10 +75,10 @@ const defaultOptions = {
     default_theme: 'default', //默认模板主题
 };
 
-module.exports = function (options) {
+module.exports = function (options, app) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
-    think.app.once('appReady', () => {
-        think._caches._view = view.getInstance(options.engine_config || {}, options.engine_type || 'ejs');
+    app.once('appReady', () => {
+        app._caches._view = view.getInstance(options.engine_config || {}, options.engine_type || 'ejs');
     });
 
     return function (ctx, next) {
@@ -97,10 +97,10 @@ module.exports = function (options) {
             if (name === undefined) {
                 return ctx._assign;
             }
-            if (think.isString(name) && arguments.length === 1) {
+            if (lib.isString(name) && arguments.length === 1) {
                 return ctx._assign[name];
             }
-            if (think.isObject(name)) {
+            if (lib.isObject(name)) {
                 for (let key in name) {
                     ctx._assign[key] = name[key];
                 }
@@ -122,7 +122,7 @@ module.exports = function (options) {
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }
-            return think._caches._view.compile(tplFile, data || ctx._assign);
+            return app._caches._view.compile(tplFile, data || ctx._assign);
         });
 
         /**
@@ -139,16 +139,16 @@ module.exports = function (options) {
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }
-            charset = charset || think._caches.configs.config['encoding'] || 'utf-8';
+            charset = charset || app.configs.config['encoding'] || 'utf-8';
             contentType = contentType || 'text/html';
             if (charset !== false && contentType.toLowerCase().indexOf('charset=') === -1) {
                 contentType += '; charset=' + charset;
             }
             ctx.type = contentType;
 
-            return think._caches._view.compile(tplFile, data || ctx._assign).then(res => {
+            return app._caches._view.compile(tplFile, data || ctx._assign).then(res => {
                 ctx.body = res;
-                return think.prevent();
+                return app.prevent();
             });
         });
 

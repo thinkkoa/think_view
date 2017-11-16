@@ -27,7 +27,7 @@ list: [...,'view'], //加载的中间件列表
 config: { //中间件配置
     ...,
     view: {
-        view_path: think.app_path + '/view', //模板目录
+        view_path: process.env.APP_PATH + '/view', //模板目录
         engine_type: 'ejs', //模版引擎名称 ejs, pug
         engine_config: { cache: true }, //模版引擎配置
         content_type: 'text/html', //模版输出类型
