@@ -11,12 +11,12 @@ const view = require('./lib/view.js');
 /**
  * 
  * 
- * @param {any} templateFile 
  * @param {any} ctx 
+ * @param {any} templateFile 
  * @param {any} options 
  * @returns 
  */
-const locateTpl = function (templateFile, ctx, options) {
+const locateTpl = function (ctx, templateFile, options) {
     let group = ctx.group ? ctx.group : '',
         controller = ctx.controller ? ctx.controller : '',
         action = ctx.action ? ctx.action : '',
@@ -38,6 +38,9 @@ const locateTpl = function (templateFile, ctx, options) {
         templateFile.push(options.file_suffix || '.html');
         return templateFile.join('');
     } else if (lib.isString(templateFile)) {
+        if (templateFile.startsWith('./')){
+            templateFile = templateFile.replace('./', `${process.env.ROOT_PATH}/static/`);
+        }
         if (lib.isFile(templateFile)) {
             return templateFile;
         }
@@ -118,7 +121,7 @@ module.exports = function (options, app) {
          * @returns 
          */
         lib.define(ctx, 'compile', function (templateFile, data) {
-            let tplFile = locateTpl(templateFile, ctx, options);
+            let tplFile = locateTpl(ctx, templateFile, options);
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }
@@ -135,7 +138,7 @@ module.exports = function (options, app) {
          * @returns 
          */
         lib.define(ctx, 'render', function (templateFile, data, charset, contentType) {
-            let tplFile = locateTpl(templateFile, ctx, options);
+            let tplFile = locateTpl(ctx, templateFile, options);
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }

@@ -1,14 +1,11 @@
 {
   "name": "think_view",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "View engine Middleware for ThinkKoa.",
   "main": "index.js",
   "scripts": {
     "test": "npm run eslint",
     "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- -t 50000 --recursive  -R spec test/",
-    "compile": "babel src -d lib",
-    "watch-compile": "npm run compile -- --watch",
-    "prepublish": "npm run compile && npm test",
     "eslint": "eslint src"
   },
   "engines": {
