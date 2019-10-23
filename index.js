@@ -145,7 +145,7 @@ module.exports = function (options, app) {
             if (!tplFile || !lib.isFile(tplFile)) {
                 ctx.throw(404, `can\'t find template file ${tplFile || ''}`);
             }
-            charset = charset || app.configs.config['encoding'] || 'utf-8';
+            charset = charset || 'utf-8';
             contentType = contentType || 'text/html';
             if (charset !== false && contentType.toLowerCase().indexOf('charset=') === -1) {
                 contentType += '; charset=' + charset;

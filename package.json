@@ -1,6 +1,6 @@
 {
   "name": "think_view",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "View engine Middleware for ThinkKoa.",
   "main": "index.js",
   "scripts": {
