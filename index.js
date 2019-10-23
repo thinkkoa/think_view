@@ -17,12 +17,20 @@ const view = require('./lib/view.js');
  * @returns 
  */
 const locateTpl = function (ctx, templateFile, options) {
+    let view_path = options.view_path ? options.view_path : process.env.APP_PATH + '/view';
+
+    if (templateFile.startsWith('./')) {
+        templateFile = templateFile.replace('./', `${view_path}/`);
+        return templateFile;
+    }
+    if (templateFile.startsWith(view_path)) {
+        return templateFile;
+    }
+
     let group = ctx.group ? ctx.group : '',
         controller = ctx.controller ? ctx.controller : '',
-        action = ctx.action ? ctx.action : '',
-        view_path = options.view_path ? options.view_path : process.env.APP_PATH + '/view';
-
-    if (lib.isEmpty(templateFile)) {
+        action = ctx.action ? ctx.action : '';
+    if (lib.isEmpty(templateFile) && !lib.isEmpty(controller)) {
         templateFile = [view_path, lib.sep];
         if (group) {
             templateFile.push(group);
@@ -37,32 +45,27 @@ const locateTpl = function (ctx, templateFile, options) {
         templateFile.push(action);
         templateFile.push(options.file_suffix || '.html');
         return templateFile.join('');
-    } else if (lib.isString(templateFile)) {
-        if (templateFile.startsWith('./')){
-            templateFile = templateFile.replace('./', `${process.env.ROOT_PATH}/static/`);
-        }
-        if (lib.isFile(templateFile)) {
-            return templateFile;
-        }
-        let tplPath = templateFile.split('/');
-        action = tplPath.pop().toLowerCase() || action;
-        controller = tplPath.pop().toLowerCase() || controller;
-        group = tplPath.pop();
-        templateFile = [view_path, lib.sep];
-        if (group) {
-            templateFile.push(group.toLowerCase());
-            templateFile.push(lib.sep);
-        }
-        templateFile.push(options.default_theme || '');
-        templateFile.push(lib.sep);
-
-        templateFile.push(controller);
-        templateFile.push(options.file_depr || '_');
-
-        templateFile.push(action);
-        templateFile.push(options.file_suffix || '.html');
-        return templateFile.join('');
     }
+
+    // let tplPath = templateFile.split('/');
+    // action = tplPath.pop().toLowerCase() || action;
+    // controller = tplPath.pop().toLowerCase() || controller;
+    // group = tplPath.pop();
+    // templateFile = [view_path, lib.sep];
+    // if (group) {
+    //     templateFile.push(group.toLowerCase());
+    //     templateFile.push(lib.sep);
+    // }
+    // templateFile.push(options.default_theme || '');
+    // templateFile.push(lib.sep);
+
+    // templateFile.push(controller);
+    // templateFile.push(options.file_depr || '_');
+
+    // templateFile.push(action);
+    // templateFile.push(options.file_suffix || '.html');
+    // return templateFile.join('');
+
     return null;
 };
 /**

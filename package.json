@@ -1,11 +1,10 @@
 {
   "name": "think_view",
-  "version": "2.0.2",
+  "version": "2.2.0",
   "description": "View engine Middleware for ThinkKoa.",
   "main": "index.js",
   "scripts": {
     "test": "npm run eslint",
-    "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha -- -t 50000 --recursive  -R spec test/",
     "eslint": "eslint src"
   },
   "engines": {
@@ -18,13 +17,12 @@
   },
   "homepage": "https://github.com/thinkkoa/think_view",
   "devDependencies": {
-    "eslint": "^4.11.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^4.0.1",
-    "supertest": "^3.0.0"
+    "eslint": "^6.5.1",
+    "mocha": "^6.2.2",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
-    "ejs": "^2.5.6",
+    "ejs": "^2.7.1",
     "think_lib": "^2.x.x"
   }
 }
