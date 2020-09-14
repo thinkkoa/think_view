@@ -17,21 +17,20 @@ const view = require('./lib/view.js');
  * @returns 
  */
 const locateTpl = function (ctx, templateFile, options) {
-    let view_path = options.view_path ? options.view_path : process.env.APP_PATH + '/view';
-
-    if (templateFile.startsWith('./')) {
-        templateFile = templateFile.replace('./', `${view_path}/`);
+    if (templateFile && templateFile.startsWith('./')) {
+        templateFile = templateFile.replace('./', `${options.view_path}/`);
         return templateFile;
     }
-    if (templateFile.startsWith(view_path)) {
+    if (templateFile && templateFile.startsWith(options.view_path)) {
         return templateFile;
     }
 
     let group = ctx.group ? ctx.group : '',
         controller = ctx.controller ? ctx.controller : '',
         action = ctx.action ? ctx.action : '';
+
     if (lib.isEmpty(templateFile) && !lib.isEmpty(controller)) {
-        templateFile = [view_path, lib.sep];
+        templateFile = [options.view_path, lib.sep];
         if (group) {
             templateFile.push(group);
             templateFile.push(lib.sep);
@@ -51,7 +50,7 @@ const locateTpl = function (ctx, templateFile, options) {
     // action = tplPath.pop().toLowerCase() || action;
     // controller = tplPath.pop().toLowerCase() || controller;
     // group = tplPath.pop();
-    // templateFile = [view_path, lib.sep];
+    // templateFile = [options.view_path, lib.sep];
     // if (group) {
     //     templateFile.push(group.toLowerCase());
     //     templateFile.push(lib.sep);
@@ -83,6 +82,12 @@ const defaultOptions = {
 
 module.exports = function (options, app) {
     options = options ? lib.extend(defaultOptions, options, true) : defaultOptions;
+
+    options.view_path = options.view_path ? options.view_path : process.env.ROOT_PATH + '/view';
+    if (options.view_path && (options.view_path).startsWith('./')) {
+        options.view_path = (options.view_path).replace('./', `${process.env.ROOT_PATH}/`);
+    }
+
     app.once('appReady', () => {
         app._caches._view = view.getInstance(options.engine_config || {}, options.engine_type || 'ejs');
     });
